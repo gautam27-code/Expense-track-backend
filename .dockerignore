@@ -1,0 +1,41 @@
+# Ignore version control
+.git
+.gitignore
+.gitattributes
+
+# Ignore IDE files
+.idea
+*.iml
+.vscode
+.settings
+.project
+.classpath
+
+# Ignore build outputs
+target/
+*.jar
+*.war
+*.ear
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
+
+# Ignore logs
+*.log
+logs/
+
+# Ignore temporary files
+*.tmp
+*.temp
+
+# Ignore node modules if any
+node_modules/
+
+# Ignore zip files
+*.zip
+
+# Ignore dashboard folder (frontend)
+expense-pilot-dashboard/
+expense-pilot-dashboard (1).zip
+expense-pilot-dashboard.zip
