@@ -30,3 +30,5 @@ VALUES (-40.00, 'Expense', 'Entertainment', 'Concert ticket', '2025-10-06');
 
 INSERT INTO expense (amount, type, category, description, date) 
 VALUES (-180.00, 'Expense', 'Shopping', 'Bought new jacket', '2025-10-07');
+
+INSERT INTO roles (name) VALUES ('USER');
