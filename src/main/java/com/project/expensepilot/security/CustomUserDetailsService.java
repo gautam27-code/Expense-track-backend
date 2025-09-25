@@ -10,18 +10,20 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class CustonUserDetailsService implements UserDetailsService {
+@Service
+public class CustomUserDetailsService implements UserDetailsService {
 
 //    @Autowired
     private UserRepo userRepo;
 
     @Autowired
-    public CustonUserDetailsService(UserRepo userRepo) {
+    public CustomUserDetailsService(UserRepo userRepo) {
         this.userRepo = userRepo;
     }
 
