@@ -1,6 +1,7 @@
 package com.project.expensepilot.controller;
 
 
+import com.project.expensepilot.dto.LoginDto;
 import com.project.expensepilot.dto.RegisterDto;
 import com.project.expensepilot.model.Role;
 import com.project.expensepilot.model.UserEntity;
@@ -9,23 +10,25 @@ import com.project.expensepilot.repo.UserRepo;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collection;
 import java.util.Collections;
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    private AuthenticationManager authenticationManager;
-    private UserRepo userRepo;
-    private RoleRepo roleRepo;
-    private PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final UserRepo userRepo;
+    private final RoleRepo roleRepo;
+    private final PasswordEncoder passwordEncoder;
 
     public AuthController(AuthenticationManager authenticationManager, UserRepo userRepo,
                           RoleRepo roleRepo, PasswordEncoder passwordEncoder) {
@@ -33,6 +36,15 @@ public class AuthController {
         this.userRepo = userRepo;
         this.roleRepo = roleRepo;
         this.passwordEncoder = passwordEncoder;
+    }
+
+    @PostMapping("login")
+    public ResponseEntity<String> login(@RequestBody LoginDto loginDto){
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginDto.getUsername(),
+                        loginDto.getPassword()));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        return new ResponseEntity<>("User signed success!", HttpStatus.OK);
     }
 
     @PostMapping("register")
@@ -44,8 +56,11 @@ public class AuthController {
         user.setUsername(registerDto.getUsername());
         user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
 
-        Role role = roleRepo.findByName("USER").get();
-        user.setRoles(Collections.singletonList(role));
+        java.util.Optional<Role> roleOpt = roleRepo.findByName("USER");
+        if (!roleOpt.isPresent()) {
+            return new ResponseEntity<>("Role USER not found.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        user.setRoles(Collections.singletonList(roleOpt.get()));
         userRepo.save(user);
         return new ResponseEntity<>("User registered successfully", HttpStatus.OK);
     }
