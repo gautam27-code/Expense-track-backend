@@ -66,5 +66,21 @@
 - This is a breaking change when upgrading from Spring Boot 2.x to 3.x.
 - The fix ensures the application builds successfully in Docker and deploys correctly on Render.com.
 
+## 2025-10-02: Validation and Exception Handling Improvements
+
+### Added Input Validation
+- **RegisterDto.java** and **LoginDto.java**:
+  - Added validation annotations (`@NotBlank`, `@Size`) to ensure username and password fields are required and have length constraints.
+
+- **AuthController.java**:
+  - Updated `login` and `register` endpoints to use `@Valid` for request body validation.
+
+### Added Global Exception Handling
+- **GlobalExceptionHandler.java** (new file):
+  - Handles validation errors and other exceptions globally for REST APIs, returning clear JSON error responses.
+
+### Why?
+- These changes ensure that invalid input is rejected with clear error messages and that exceptions are handled consistently across the API.
+
 ---
 **If you need more details or want to document additional changes, update this file accordingly.**
