@@ -1,5 +1,6 @@
 package com.project.expensepilot.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,5 +21,10 @@ public class Expense {
     private String description;
     
     private String date; // Ideally, use LocalDate for date representation
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    @JsonIgnore
+    private UserEntity user;
 
 }

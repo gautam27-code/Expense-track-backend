@@ -1,11 +1,17 @@
 package com.project.expensepilot.controller;
 
 import com.project.expensepilot.model.Expense;
+import com.project.expensepilot.model.UserEntity;
+import com.project.expensepilot.repo.UserRepo;
 import com.project.expensepilot.service.ExpenseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @CrossOrigin
@@ -15,19 +21,41 @@ public class ExpenseController {
     @Autowired
     private ExpenseService expenseService;
 
+    @Autowired
+    private UserRepo userRepo;
+
     @GetMapping("/")
     public String greet(){
         return "Hello World! Welcome to my ExpensePilot";
     }
 
     @PostMapping("/expense")
-    public void createExpense(@RequestBody Expense expense) {
-        expenseService.addExpense(expense);
+    public ResponseEntity<?> createExpense(@RequestBody Expense expense) {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String username = authentication.getName();
+            UserEntity user = userRepo.findByUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
+            expense.setUser(user);
+            expenseService.addExpense(expense);
+            return ResponseEntity.status(HttpStatus.CREATED).body(expense);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to add expense: " + e.getMessage());
+        }
     }
 
     @GetMapping("/expenses")
-    public Iterable<Expense> getExpenses() {
-        return expenseService.getAllExpenses();
+    public ResponseEntity<List<Expense>> getExpenses(
+            @RequestParam(required = false) String type,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String startDate,
+            @RequestParam(required = false) String endDate,
+            @RequestParam(required = false) String description,
+            @RequestParam(required = false, defaultValue = "date") String sortField,
+            @RequestParam(required = false, defaultValue = "desc") String sortOrder) {
+        List<Expense> expenses = expenseService.getAllExpenses(type, category, startDate, endDate, description, sortField, sortOrder);
+        return new ResponseEntity<>(expenses, HttpStatus.OK);
     }
 
     @DeleteMapping("/expense/{id}")

@@ -12,6 +12,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,7 +22,8 @@ import java.util.stream.Collectors;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-//    @Autowired
+    private static final Logger logger = LoggerFactory.getLogger(CustomUserDetailsService.class);
+
     private UserRepo userRepo;
 
     @Autowired
@@ -29,7 +33,12 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserEntity user = userRepo.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("Username not found"));
+        logger.info("CustomUserDetailsService: Looking up user by username: {}", username);
+        UserEntity user = userRepo.findByUsername(username).orElseThrow(() -> {
+            logger.error("CustomUserDetailsService: Username not found: {}", username);
+            return new UsernameNotFoundException("Username not found");
+        });
+        logger.info("CustomUserDetailsService: Found user: {} with roles: {}", user.getUsername(), user.getRoles());
         return new User(user.getUsername(), user.getPassword(), mapRolesToAuthorities(user.getRoles()));
      }
 
