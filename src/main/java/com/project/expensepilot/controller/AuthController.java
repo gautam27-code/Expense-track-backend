@@ -10,6 +10,7 @@ import com.project.expensepilot.repo.RoleRepo;
 import com.project.expensepilot.repo.UserRepo;
 import com.project.expensepilot.security.JWTAuthenticationFilter;
 import com.project.expensepilot.security.JWTGenerator;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -44,7 +45,7 @@ public class AuthController {
     }
 
     @PostMapping("login")
-    public ResponseEntity<AuthResponseDTO> login(@RequestBody LoginDto loginDto){
+    public ResponseEntity<AuthResponseDTO> login(@Valid @RequestBody LoginDto loginDto){
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginDto.getUsername(),
                         loginDto.getPassword()));
@@ -54,7 +55,7 @@ public class AuthController {
     }
 
     @PostMapping("register")
-    public ResponseEntity<String> register(@RequestBody RegisterDto registerDto){
+    public ResponseEntity<String> register(@Valid @RequestBody RegisterDto registerDto){
         if(userRepo.existsByUsername(registerDto.getUsername())){
             return new ResponseEntity<>("Username already taken.", HttpStatus.BAD_REQUEST);
         }

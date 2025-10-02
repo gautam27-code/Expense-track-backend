@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CopilotDiffPersistence">
+    <option name="pendingDiffs">
+      <map>
+        <entry key="$PROJECT_DIR$/src/main/java/com/project/expensepilot/dto/RegisterDto.java">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/src/main/java/com/project/expensepilot/dto/RegisterDto.java" />
+              <option name="originalContent" value="package com.project.expensepilot.dto;&#10;&#10;import lombok.Data;&#10;import jakarta.validation.constraints.NotBlank;&#10;import jakarta.validation.constraints.Size;&#10;&#10;@Data&#10;public class RegisterDto {&#10;    @NotBlank(message = &quot;Username is required&quot;)&#10;    @Size(min = 3, max = 50, message = &quot;Username must be between 3 and 50 characters&quot;)&#10;    private String username;&#10;&#10;    @NotBlank(message = &quot;Password is required&quot;)&#10;    @Size(min = 6, max = 100, message = &quot;Password must be between 6 and 100 characters&quot;)&#10;    private String password;&#10;}&#10;" />
+              <option name="updatedContent" value="package com.project.expensepilot.dto;&#13;&#10;&#13;&#10;import lombok.Data;&#13;&#10;import jakarta.validation.constraints.NotBlank;&#13;&#10;import jakarta.validation.constraints.Size;&#13;&#10;&#13;&#10;@Data&#13;&#10;public class RegisterDto {&#13;&#10;    @NotBlank(message = &quot;Username is required&quot;)&#13;&#10;    @Size(min = 3, max = 50, message = &quot;Username must be between 3 and 50 characters&quot;)&#13;&#10;    private String username;&#13;&#10;&#13;&#10;    @NotBlank(message = &quot;Password is required&quot;)&#13;&#10;    @Size(min = 6, max = 100, message = &quot;Password must be between 6 and 100 characters&quot;)&#13;&#10;    private String password;&#13;&#10;}" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
