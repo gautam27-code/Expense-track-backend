@@ -45,9 +45,18 @@ public class AuthController {
         this.passwordEncoder = passwordEncoder;
         this.jwtGenerator = jwtGenerator;
     }
-
-    //
     
+    //
+    @PostMapping("login")
+    public ResponseEntity<AuthResponseDTO> login(@Valid @RequestBody LoginDto loginDto){
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginDto.getUsername(),
+                        loginDto.getPassword()));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String token = jwtGenerator.generateToken(authentication);
+        UserEntity user = userRepo.findByUsername(loginDto.getUsername()).orElseThrow();
+        return new ResponseEntity<>(new AuthResponseDTO(token, user), HttpStatus.OK);
+    }
 
     @PostMapping("register")
     public ResponseEntity<?> register(@Valid @RequestBody RegisterDto registerDto){
