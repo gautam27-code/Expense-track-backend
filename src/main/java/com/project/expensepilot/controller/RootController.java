@@ -12,6 +12,10 @@ public class RootController {
     public ResponseEntity<String> root() {
         return new ResponseEntity<>("ExpensePilot backend is running! API endpoints available at /api/", HttpStatus.OK);
     }
-     //
+
+     @GetMapping("/status")
+    public ResponseEntity<String> status() {
+        return new ResponseEntity<>("Server is healthy", HttpStatus.OK);
+    }
     
 }
